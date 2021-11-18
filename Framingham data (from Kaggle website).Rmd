@@ -1,0 +1,78 @@
+---
+title: "Categorical Data Analysis EXERCISE"
+author: "Jo, Munsun"
+date: '2021 11 18 '
+output: html_document
+---
+
+## Framingham data (from Kaggle website)
+### Heart Disease and Blood Pressure
+
+#### Response variable: 
+- 10 year risk of coronary heart disease CHD (1:Yes / 2:No)
+
+#### Explanatory variables:
+- Demographic: sex, age
+
+- Behavioral: currentSmoker, cigsPerDay
+
+- Medical (binary, historical): BPMeds (blood pressure medication); prevalentStroke (stroke);
+
+- prevalentHyp (hypertensive); diabetes Medical (continuous, current): totChol (total cholesterol level); sysBP (systolic BP); diaBP (diastolic BP); BMI; heartrate; glucose
+
+```{r}
+# 데이터 불러오기
+setwd("/Users/chom5/Desktop/범주형")
+fram <- read.csv("pr1_framingham.csv", header=TRUE)
+
+# 데이터 확인
+head(fram[ , 1:6])
+```
+
+```{r}
+head(fram[ , 7:10])
+```
+
+```{r}
+head(fram[ , c(1:10)])
+```
+
+```{r}
+str(fram)
+```
+
+```{r}
+# Convert categorical variables to factors
+fram$BPMeds = as.factor(fram$BPMeds)
+fram$prevalentStroke = as.factor(fram$prevalentStroke)
+fram$prevalentHyp = as.factor(fram$prevalentHyp)
+fram$diabetes = as.factor(fram$diabetes)
+fram$TenYearCHD = as.factor(fram$TenYearCHD)
+```
+
+```{r}
+# Correlation plot
+fram_new = na.omit(fram)
+str(fram_new)
+
+library(corrplot)
+fram_new_num = subset(fram_new[c(2,5,10:15)])
+corrplot(cor(fram_new_num))
+```
+
+```{r}
+# model selection - logistic model
+fram_new_1 = glm(TenYearCHD ~ ., data = fram_new, family = binomial)
+summary(fram_new_1)
+```
+
+```{r}
+fram_new_2 <- glm(TenYearCHD ~ . - diabetes, data = fram_new, family = binomial)
+summary(fram_new_2)
+```
+
+```{r}
+# criterion for model selection - AIC
+step(fram_new_1, direction="backward")
+```
+
