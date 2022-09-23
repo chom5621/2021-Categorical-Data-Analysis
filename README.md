@@ -1,10 +1,10 @@
 ### Categorical Data Analysis in R
 
-* logistic regression
+* multiple logistic regression
 
-* model selection 
+* model selection (aic, bic, backward elimination)
 
 * model checking
 
-* aic, bic, backward
+* collapsability
 
